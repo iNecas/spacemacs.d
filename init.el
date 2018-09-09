@@ -39,7 +39,7 @@ values."
      ansible
      auto-completion
      better-defaults
-     emacs-lisp
+     (emacs-lisp :variables emacs-lisp-hide-namespace-prefix t)
      git
      github
      go
@@ -325,6 +325,8 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  (add-to-list 'load-path "~/.spacemacs.d/etc/")
+  (require 'inecas-links)
   (global-set-key "\C-i" 'evil-jump-forward) ;; otherwise, there is something else mapping to it
   )
 
