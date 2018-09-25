@@ -319,6 +319,68 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
+(defun cfg-jump () (global-set-key "\C-i" 'evil-jump-forward)) ;; otherwise, there is something else mapping to it
+
+(defun cfg-paredit ()
+  (global-set-key (kbd "C-)") 'sp-forward-slurp-sexp)
+  (global-set-key (kbd "C-(") 'sp-forward-barf-sexp))
+
+(defun cfg-projectile ()
+  (spacemacs/set-leader-keys "\\" 'projectile-grep)
+  )
+
+(defun cfg-ruby ()
+  (with-eval-after-load 'inf-ruby
+    (defun ruby-send-region (start end &optional print)
+      "I'm overriding the original definition of the inf-ruby mode in order to print evaluated string before the evaluation itself"
+      (interactive "r\nP")
+      (let (term (file (or buffer-file-name (buffer-name))) line (text (buffer-substring start end)))
+        (save-excursion
+          (save-restriction
+            (widen)
+            (goto-char start)
+            (setq line (+ start (forward-line (- start)) 1))
+            (goto-char start)
+            (while (progn
+                     (setq term (apply 'format ruby-send-terminator (random) (current-time)))
+                     (re-search-forward (concat "^" (regexp-quote term) "$") end t)))))
+        ;; compilation-parse-errors parses from second line.
+        (save-excursion
+          (let ((m (process-mark (inf-ruby-proc))))
+            (set-buffer (marker-buffer m))
+            (goto-char m)
+            (insert text) ;; this is where the magic happens
+            (insert ruby-eval-separator "\n")
+            (set-marker m (point))))
+        (comint-send-string (inf-ruby-proc) (format "eval <<'%s', %s, %S, %d\n"
+                                                    term inf-ruby-eval-binding
+                                                    file line))
+        (comint-send-region (inf-ruby-proc) start end)
+        (comint-send-string (inf-ruby-proc) (concat "\n" term "\n"))
+        (when print (ruby-print-result))))
+    )
+  (with-eval-after-load 'ruby-mode (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
+  (with-eval-after-load 'hideshow
+    (add-to-list 'hs-special-modes-alist
+                 `(ruby-mode
+                   ,(rx (or "def" "do" "{" "[")) ; Block start
+                   ,(rx (or "}" "]" "end"))                       ; Block end
+                   ,(rx (or "#" "=begin"))                        ; Comment start
+                   ruby-forward-sexp nil)))
+  )
+
+(defun cfg-windows ()
+  (global-set-key (kbd "C-M-l") 'evil-window-right)
+  (global-set-key (kbd "C-M-h") 'evil-window-left)
+  (global-set-key (kbd "C-M-k") 'evil-window-up)
+  (global-set-key (kbd "C-M-j") 'evil-window-down)
+  )
+
+(defun cfg-expand-region ()
+  (define-key ruby-tools-mode-map (kbd "C-'") nil)
+  (global-set-key (kbd "C-'") 'er/expand-region)
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -328,11 +390,13 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (add-to-list 'load-path "~/.spacemacs.d/etc/")
   (require 'inecas-links)
-  (global-set-key "\C-i" 'evil-jump-forward) ;; otherwise, there is something else mapping to it
-  (spacemacs/set-leader-keys "\\" 'projectile-grep)
+  (cfg-jump)
+  (cfg-paredit)
+  (cfg-projectile)
   (setq truncate-lines t)
-  (with-eval-after-load 'inf-ruby
-    (require 'inecas-inf-ruby))
+  (cfg-ruby)
+  (cfg-windows)
+  (cfg-expand-region)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
