@@ -326,8 +326,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (global-set-key (kbd "C-(") 'sp-forward-barf-sexp))
 
 (defun cfg-projectile ()
-  (spacemacs/set-leader-keys "\\" 'projectile-grep)
-  )
+  (with-eval-after-load 'projectile
+    (spacemacs/set-leader-keys "\\" 'projectile-grep)
+    (setq projectile-require-project-root nil)
+    (global-set-key (kbd "C-x b") 'helm-mini)
+    (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
+    ))
 
 (defun cfg-ruby ()
   (with-eval-after-load 'inf-ruby
@@ -359,7 +363,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
         (comint-send-string (inf-ruby-proc) (concat "\n" term "\n"))
         (when print (ruby-print-result))))
     )
-  (with-eval-after-load 'ruby-mode (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
+  (with-eval-after-load 'ruby-tools (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
   (with-eval-after-load 'hideshow
     (add-to-list 'hs-special-modes-alist
                  `(ruby-mode
@@ -376,9 +380,21 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (global-set-key (kbd "C-M-j") 'evil-window-down)
   )
 
+(defun cfg-evil-mc ()
+  (global-evil-mc-mode 1))
+
 (defun cfg-expand-region ()
-  (define-key ruby-tools-mode-map (kbd "C-'") nil)
+  (with-eval-after-load 'ruby-tools
+    (define-key ruby-tools-mode-map (kbd "C-'") nil )
+    (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode)))
+    (define-key ruby-tools-mode-map (kbd "C-\"") nil)
+    (define-key ruby-mode-map (kbd "C-\"") 'er/mark-ruby-block-up)
+    )
   (global-set-key (kbd "C-'") 'er/expand-region)
+  )
+
+(defun cfg-flycheck ()
+  (setq-default flycheck-disabled-checkers '(ruby-rubocop))
   )
 
 (defun dotspacemacs/user-config ()
@@ -397,6 +413,8 @@ you should place your code here."
   (cfg-ruby)
   (cfg-windows)
   (cfg-expand-region)
+  (cfg-evil-mc)
+  (cfg-flycheck)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
