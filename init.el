@@ -321,14 +321,18 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun cfg-jump () (global-set-key "\C-i" 'evil-jump-forward)) ;; otherwise, there is something else mapping to it
 
-(defun cfg-paredit ()
+(defun cfg-smartparams ()
   (global-set-key (kbd "C-)") 'sp-forward-slurp-sexp)
-  (global-set-key (kbd "C-(") 'sp-forward-barf-sexp))
+  (global-set-key (kbd "C-(") 'sp-forward-barf-sexp)
+  (global-set-key (kbd "C-}") 'sp-unwrap-sexp)
+  (global-set-key (kbd "C-{") 'sp-wrap-round)
+  )
 
 (defun cfg-projectile ()
   (with-eval-after-load 'projectile
     (spacemacs/set-leader-keys "\\" 'projectile-grep)
     (setq projectile-require-project-root nil)
+    (setq projectile-globally-ignored-directories (append projectile-globally-ignored-directories '("node_modules")) )
     (global-set-key (kbd "C-x b") 'helm-mini)
     (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
     ))
@@ -405,9 +409,10 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (add-to-list 'load-path "~/.spacemacs.d/etc/")
-  (require 'inecas-links)
+  (require 'inec-links)
+  (require 'inec-frame)
   (cfg-jump)
-  (cfg-paredit)
+  (cfg-smartparams)
   (cfg-projectile)
   (setq truncate-lines t)
   (cfg-ruby)
