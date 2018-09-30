@@ -383,8 +383,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (add-to-list 'hs-special-modes-alist
                  `(ruby-mode
                    ,(rx (or "def" "do" "{" "[")) ; Block start
-                   ,(rx (or "}" "]" "end"))                       ; Block end
-                   ,(rx (or "#" "=begin"))                        ; Comment start
+                   ,(rx (or "}" "]" "end"))      ; Block end
+                   ,(rx (or "#" "=begin"))       ; Comment start
                    ruby-forward-sexp nil)))
   )
 
@@ -396,7 +396,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun cfg-evil-mc ()
-  (global-evil-mc-mode 1))
+  (with-eval-after-load 'evil-mc-mode
+    (global-evil-mc-mode 1)
+    (global-set-key "\C-d" 'delete-forward-char) ; To fix deleting chars in mc mode
+    ))
 
 (defun cfg-expand-region ()
   (with-eval-after-load 'ruby-tools
