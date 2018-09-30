@@ -15,6 +15,7 @@
   (condition-case nil
       (progn
         (select-frame-by-name project-name)
+        (delete-other-windows)
         nil)
     (error
      (let ((new-frame (make-frame)))
@@ -29,7 +30,11 @@
       (defun ,project-fun ()
         (interactive)
         (if (inec-frame/open-my-project ,name)
-            (projectile-switch-project-by-name ,dir t)
+            (progn
+              (magit-status ,dir)
+              (delete-other-windows)
+              )
+          ;  (projectile-switch-project-by-name ,dir t)
           ))
       (spacemacs/set-leader-keys (concat "P" ,char) ',project-fun)
       )))
@@ -37,6 +42,8 @@
 (spacemacs/declare-prefix "P" "inec-project")
 (inec-frame/-define-project "d" "dynflow" "~/Projects/ws/foreman-rex/dynflow")
 (inec-frame/-define-project "f" "foreman" "~/Projects/ws/foreman-rex/foreman-rails5")
+(inec-frame/-define-project "e" "emacs" "~/.spacemacs.d")
+(inec-frame/-define-project "s" "school" "~/Projects/ws/school/2018")
 
 
 (provide 'inec-frame)

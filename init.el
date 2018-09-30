@@ -67,7 +67,8 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(keychain-environment
-                            string-edit)
+                            string-edit
+                            seeing-is-believing)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -332,7 +333,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (with-eval-after-load 'projectile
     (spacemacs/set-leader-keys "\\" 'projectile-grep)
     (setq projectile-require-project-root nil)
-    (setq projectile-globally-ignored-directories (append projectile-globally-ignored-directories '("node_modules")) )
+    (add-to-list 'projectile-globally-ignored-directories "node_modules")
     (global-set-key (kbd "C-x b") 'helm-mini)
     (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
     ))
@@ -368,6 +369,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
         (when print (ruby-print-result))))
     )
   (with-eval-after-load 'ruby-tools (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
+  (with-eval-after-load 'ruby-mode
+    (require 'seeing-is-believing)
+    (defun seeing-is-believing-clear-mark-run ()
+      (interactive)
+      (seeing-is-believing-mark-current-line-for-xmpfilter)
+      (seeing-is-believing-run-as-xmpfilter))
+    (define-key ruby-mode-map (kbd "C-c C-m") 'seeing-is-believing-run)
+    (define-key ruby-mode-map (kbd "C-c C-c") 'seeing-is-believing-clear)
+    (define-key ruby-mode-map (kbd "C-c C-v") 'seeing-is-believing-clear-mark-run)
+    (add-hook 'ruby-mode-hook 'seeing-is-believing))
   (with-eval-after-load 'hideshow
     (add-to-list 'hs-special-modes-alist
                  `(ruby-mode
