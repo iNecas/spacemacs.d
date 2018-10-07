@@ -7,11 +7,10 @@
 
 (defun inec-frame/new-custom (name)
   (interactive "sProject name: ")
-  (if (inec-frame-open-my-project name)
+  (if (inec-frame/-open-my-project name)
      (helm-projectile-switch-project)))
 
-(defun inec-frame/open-my-project (project-name)
-  (interactive)
+(defun inec-frame/-open-my-project (project-name)
   (condition-case nil
       (progn
         (select-frame-by-name project-name)
@@ -29,7 +28,7 @@
    `(progn
       (defun ,project-fun ()
         (interactive)
-        (if (inec-frame/open-my-project ,name)
+        (if (inec-frame/-open-my-project ,name)
             (progn
               (magit-status ,dir)
               (delete-other-windows)
@@ -40,8 +39,10 @@
       )))
 
 (spacemacs/declare-prefix "P" "inec-project")
+(spacemacs/set-leader-keys "P'" 'inec-frame/new-custom)
 (inec-frame/-define-project "d" "dynflow" "~/Projects/ws/foreman-rex/dynflow")
 (inec-frame/-define-project "f" "foreman" "~/Projects/ws/foreman-rex/foreman-rails5")
+(inec-frame/-define-project "k" "katello" "~/Projects/ws/devel/katello")
 (inec-frame/-define-project "e" "emacs" "~/.spacemacs.d")
 (inec-frame/-define-project "s" "school" "~/Projects/ws/school/2018")
 

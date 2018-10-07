@@ -415,6 +415,21 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-default flycheck-disabled-checkers '(ruby-rubocop))
   )
 
+(defun cfg-github ()
+  (defun git-link-github (hostname dirname filename branch commit start end)
+    "Override the git-link-github handler to always use commits instead of branched"
+    (format "https://%s/%s/blob/%s/%s"
+	          hostname
+	          dirname
+            commit ; <- this changed was "(or branch commit)"
+            (concat filename
+                    (when start
+                      (concat "#"
+                              (if end
+                                  (format "L%s-L%s" start end)
+                                (format "L%s" start)))))))
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -434,6 +449,7 @@ you should place your code here."
   (cfg-expand-region)
   (cfg-evil-mc)
   (cfg-flycheck)
+  (cfg-github)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
