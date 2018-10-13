@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: instance_var
+# key: @a
+# --
+@${1:var} = $1

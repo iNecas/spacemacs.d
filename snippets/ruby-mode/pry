@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: pry
+# key: pr
+# --
+require 'pry'; binding.pry$0
