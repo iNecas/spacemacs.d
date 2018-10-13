@@ -458,8 +458,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                                  "yasnippet-snippets/"
                                                  "snippets/")))
       (add-to-list 'yas-snippet-dirs yasnippet-snippets-custom-dir)
-      )
-)
+      )))
+
+(defun cfg-auto-complete ()
+  (with-eval-after-load 'company
+    (global-set-key (kbd "M-C-/") 'company-filter-candidates))
   )
 
 (defun dotspacemacs/user-config ()
@@ -484,6 +487,7 @@ you should place your code here."
   (cfg-flycheck)
   (cfg-github)
   (cfg-yasnippet)
+  (cfg-auto-complete)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
