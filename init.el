@@ -30,7 +30,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -430,6 +430,25 @@ before packages are loaded. If you are unsure, you should try in setting them in
                                 (format "L%s" start)))))))
   )
 
+(defun cfg-dired ()
+  (with-eval-after-load 'dired
+    (defun dired-open-file-in-eww ()
+      "Opens file at browser in eww"
+      (interactive)
+      (eww-open-file (dired-get-file-for-visit)))
+    (define-key dired-mode-map (kbd "V") 'dired-open-file-in-eww)
+    )
+  )
+
+(defun cfg-search ()
+  "Tweak behavior of search"
+  (defun inec-search-next-and-top ()
+    (interactive)
+    (evil-search-next)
+    (evil-scroll-line-to-top nil))
+  (define-key evil-motion-state-map "n" 'inec-search-next-and-top)
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -440,6 +459,7 @@ you should place your code here."
   (add-to-list 'load-path "~/.spacemacs.d/etc/")
   (require 'inec-links)
   (require 'inec-frame)
+  (cfg-dired)
   (cfg-jump)
   (cfg-smartparams)
   (cfg-projectile)
