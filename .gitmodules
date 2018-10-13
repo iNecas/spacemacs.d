@@ -1,0 +1,4 @@
+[submodule "yasnippet-snippets"]
+	path = yasnippet-snippets
+	url = git@github.com:iNecas/yasnippet-snippets.git
+	branch = iNecas

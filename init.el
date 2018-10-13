@@ -39,7 +39,8 @@ values."
      ansible
      (auto-completion :variables
                       auto-completion-enable-help-tooltip 'manual
-                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets")
+                      auto-completion-private-snippets-directory "~/.spacemacs.d/snippets"
+                      auto-completion-enable-snippets-in-popup t)
      better-defaults
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix t)
      git
@@ -74,7 +75,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(yasnippet-snippets)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -451,6 +452,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (define-key evil-motion-state-map "n" 'inec-search-next-and-top)
   )
 
+(defun cfg-yasnippet ()
+  (with-eval-after-load 'yasnippet
+    (let ((yasnippet-snippets-custom-dir (concat dotspacemacs-directory
+                                                 "yasnippet-snippets/"
+                                                 "snippets/")))
+      (add-to-list 'yas-snippet-dirs yasnippet-snippets-custom-dir)
+      )
+)
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -472,6 +483,7 @@ you should place your code here."
   (cfg-evil-mc)
   (cfg-flycheck)
   (cfg-github)
+  (cfg-yasnippet)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
