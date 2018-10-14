@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: Gemfile
+# key: gem
+# --
+source 'https://rubygems.org'
+
+gem 'pry'
+$0

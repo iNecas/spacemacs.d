@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: expand_path
+# key: ep
+# --
+File.expand_path('${1:relative_path}', File.dirname(__FILE__))$0

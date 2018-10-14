@@ -462,7 +462,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun cfg-auto-complete ()
   (with-eval-after-load 'company
-    (global-set-key (kbd "M-C-/") 'company-filter-candidates))
+    (global-set-key (kbd "M-C-/") 'company-filter-candidates)
+    (global-set-key (kbd "M-\\") 'dabbrev-completion))
   )
 
 (defun dotspacemacs/user-config ()

@@ -1,0 +1,8 @@
+# -*- mode: snippet-*-
+# contributor: Ivan Necas
+# name: test_description
+# key: desc
+# --
+describe '${1:descrpition}' do
+  $0
+end

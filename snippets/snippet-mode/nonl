@@ -1,0 +1,6 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# contributor: Ivan Necas
+# name: No new line
+# key: nonl
+# --
+require-final-newline: nil$0
