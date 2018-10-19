@@ -312,7 +312,7 @@ values."
 
    dotspacemacs-mode-line-theme 'spacemacs
    )
-)
+  )
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -466,6 +466,45 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key (kbd "M-\\") 'dabbrev-completion))
   )
 
+(defun cfg-spelling ()
+  (with-eval-after-load 'flyspell
+  (defun flyspell-add-current-word ()
+    "Add current word to ispell dictionary"
+    (interactive)
+    (let ((word (thing-at-point 'word)))
+      (ispell-send-string (concat "*" word "\n"))
+      (ispell-send-string "#\n")
+      (flyspell-unhighlight-at (point))
+      (setq ispell-pdict-modified-p '(t)))
+    )
+  (spacemacs/set-leader-keys "Sa" 'flyspell-add-current-word)
+
+  ; I have not found a better way to add more commands to existing transient state
+  (spacemacs|define-transient-state spell-checking2
+    :title "Spell Checking Transient State"
+    :doc "
+Spell Commands^^             Other
+--------------^^             -----
+[_b_]  check whole buffer    [_t_]  toggle spell check
+[_d_]  change dictionary     [_q_]  exit
+[_n_]  next spell error      [_Q_]  exit and disable spell check
+[_c_]  correct word
+[_a_]  add word to custom dictionary
+"
+    :on-enter (flyspell-mode)
+    :bindings
+    ("a" flyspell-add-current-word)
+    ("b" flyspell-buffer)
+    ("d" spell-checking/change-dictionary)
+    ("n" flyspell-goto-next-error)
+    ("c" flyspell-correct-previous-word-generic)
+    ("Q" flyspell-mode :exit t)
+    ("q" nil :exit t)
+    ("t" spacemacs/toggle-spelling-checking))
+  )
+  (spacemacs/set-leader-keys "S." 'spacemacs/spell-checking2-transient-state/body)
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -489,6 +528,8 @@ you should place your code here."
   (cfg-github)
   (cfg-yasnippet)
   (cfg-auto-complete)
+  (cfg-github)
+  (cfg-spelling)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
