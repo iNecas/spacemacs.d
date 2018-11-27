@@ -52,7 +52,8 @@
 (inec-frame/-define-project "F" "forklift" "~/Projects/ws/infra/forklift")
 (inec-frame/-define-project "e" "emacs" "~/.spacemacs.d")
 (inec-frame/-define-project "s" "school" "~/Projects/ws/school/2018")
-(inec-frame/-define-project "o" "org" "~/Documents/org/todo_new.org" t)
+(inec-frame/-define-project "o" "org" "~/Documents/org/todo_work.org" t)
+(inec-frame/-define-project "m" "foreman-maintain" "~/Projects/ws/foreman-maintain/foreman_maintain" t)
 
 
 (provide 'inec-frame)

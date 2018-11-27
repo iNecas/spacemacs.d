@@ -50,7 +50,9 @@ values."
      html
      javascript
      markdown
-     org
+     (org :variables
+          org-enable-org-journal-support t
+          org-journal-dir "~/Documents/org/journal/")
      plantuml
      react
      python
@@ -72,6 +74,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(keychain-environment
                             string-edit
+                            vlf
                             seeing-is-believing)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -506,6 +509,25 @@ Spell Commands^^             Other
   (spacemacs/set-leader-keys "S." 'spacemacs/spell-checking2-transient-state/body)
   )
 
+(defun cfg-org ()
+  (setq org-journal-dir "~/Documents/org/journal/")
+  (setq org-capture-templates
+        (quote (("p" "Todo Personal" entry (file+headline "~/Documents/org/todo_personal.org" "Personal Tasks") "* TODO %?" :clock-keep t)
+                ("w" "Todo Work" entry (file+headline "~/Documents/org/todo_work.org" "Work Tasks") "* TODO %? :other:" :clock-keep t)
+                ("s" "Todo School" entry (file+headline "~/Documents/org/todo_school.org" "School Tasks") "* TODO %?" :clock-keep t)
+                ("e" "Todo Emacs" entry (file+headline "~/Documents/org/todo_emacs.org" "Emacs Tasks") "* TODO %?" :clock-keep t)
+                ("b" "Todo Brunclik" entry (file+headline "~/Documents/org/todo_brunclik.org" "AKS Tasks") "* TODO %?" :clock-keep t)
+                ("a" "Todo Apipie" entry (file+headline "~/Documents/org/todo_apipie.org" "Apipie Tasks") "* TODO %?" :clock-keep t)
+                ("P" "Notes Personal" entry (file+headline "~/Documents/org/notes_personal.org" "Personal Notes") "* %u %?" :clock-keep t)
+                ("W" "Notes Work" entry (file+headline "~/Documents/org/notes_work.org" "Work Notes") "* %u %?" :clock-keep t)
+                ("S" "Notes School" entry (file+headline "~/Documents/org/notes_school.org" "School Notes") "* %u %?" :clock-keep t)
+                ("E" "Notes Emacs" entry (file+headline "~/Documents/org/notes_emacs.org" "Emacs Notes") "* %u %?" :clock-keep t)
+                ("B" "Notes Bruclik" entry (file+headline "~/Documents/org/notes_brunclik.org" "AKS Notes") "* %u %?" :clock-keep t)
+                ("A" "Notes Apipie" entry (file+headline "~/Documents/org/notes_apipie.org" "Apipie Notes") "* %u %?" :clock-keep t)
+                ("n" "Notes" entry (file "~/Documents/org/notes.org") "* %u %?" :clock-keep t)
+                ("d" "Done" entry (file+headline "~/Documents/org/todo.org" "Tasks") "* DONE %?\n  CLOSED: %U" :clock-keep t))))
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -558,9 +580,10 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files (quote ("~/Documents/org/todo_work.org")))
  '(package-selected-packages
    (quote
-    (yapfify pyvenv pytest pyenv-mode py-isort pippel pipenv pip-requirements live-py-mode importmagic epc ctable concurrent deferred helm-pydoc cython-mode company-anaconda anaconda-mode pythonic xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help diff-hl company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (vlf xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help diff-hl company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
