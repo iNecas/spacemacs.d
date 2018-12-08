@@ -75,7 +75,9 @@ values."
    dotspacemacs-additional-packages '(keychain-environment
                             string-edit
                             vlf
-                            seeing-is-believing)
+                            seeing-is-believing
+                            pocket-reader
+                            )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -468,7 +470,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
 (defun cfg-auto-complete ()
   (with-eval-after-load 'company
     (global-set-key (kbd "M-C-/") 'company-filter-candidates)
-    (global-set-key (kbd "M-\\") 'dabbrev-completion))
+    (global-set-key (kbd "M-\\") 'dabbrev-completion)
+    (setq company-frontends '(company-pseudo-tooltip-frontend company-quickhelp-frontend))
+    )
   )
 
 (defun cfg-spelling ()
@@ -511,10 +515,26 @@ Spell Commands^^             Other
   )
 
 (defun cfg-org ()
+  (with-eval-after-load 'org
   (setq org-journal-dir "~/Documents/org/journal/")
+  (setq org-startup-indented t)
+  (setq org-tag-alist '(("triage" . ?t) ("fix" . ?f) ("review" . ?r)
+                        ("school" . ?s) ("write" . ?w) ("devel" . ?d) ("learn" . ?l) ("repeating" . ?R)
+                        ("customer" . ?c) ("investigate" . ?i) ("improve" . ?I)("emacs" . ?e) ("hotfix" . ?h)))
+  (setq org-agenda-custom-commands
+        '(("n" "Agenda and all TODOs" ((agenda "") (alltodo "")))
+          ("u" "Unscheduled TODO"
+           ((todo ""
+                  ((org-agenda-overriding-header "\nUnscheduled TODO")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)))))
+           nil
+           nil)))
+  (setq org-agenda-log-mode-items '(closed clock state))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "SCHEDULED" "STARTED" "WAITING(@/!)" "DELEGATED(@/!)" "DEFERRED(@/!)" "|" "DONE(d!)" "CANCELLED(@/!)" "NONE")))
   (setq org-capture-templates
         (quote (("p" "Todo Personal" entry (file+headline "~/Documents/org/todo_personal.org" "Personal Tasks") "* TODO %?" :clock-keep t)
-                ("w" "Todo Work" entry (file+headline "~/Documents/org/todo_work.org" "Work Tasks") "* TODO %? :other:" :clock-keep t)
+                ("w" "Todo Work" entry (file+headline "~/Documents/org/todo_work.org" "Work Tasks") "* TODO %?" :clock-keep t)
                 ("s" "Todo School" entry (file+headline "~/Documents/org/todo_school.org" "School Tasks") "* TODO %?" :clock-keep t)
                 ("e" "Todo Emacs" entry (file+headline "~/Documents/org/todo_emacs.org" "Emacs Tasks") "* TODO %?" :clock-keep t)
                 ("b" "Todo Brunclik" entry (file+headline "~/Documents/org/todo_brunclik.org" "AKS Tasks") "* TODO %?" :clock-keep t)
@@ -527,6 +547,30 @@ Spell Commands^^             Other
                 ("A" "Notes Apipie" entry (file+headline "~/Documents/org/notes_apipie.org" "Apipie Notes") "* %u %?" :clock-keep t)
                 ("n" "Notes" entry (file "~/Documents/org/notes.org") "* %u %?" :clock-keep t)
                 ("d" "Done" entry (file+headline "~/Documents/org/todo.org" "Tasks") "* DONE %?\n  CLOSED: %U" :clock-keep t))))
+  )
+  )
+
+(defun inc-go-show-doc ()
+  (interactive)
+  (forward-word)
+  (setq company-backend 'company-go)
+  (setq company-point (point))
+  ;; (setq company-candidates (company-go 'candidates))
+  (company-update-candidates (company-go 'candidates))
+  (company-call-frontends 'update)
+  ;;(company-search-mode 1)
+  )
+
+(defun cfg-go ()
+  (with-eval-after-load 'go-mode
+    (setq go-format-before-save t)
+    (setq godoc-at-point-function 'godoc-gogetdoc)
+    (setq go-tab-width 8)
+    (add-hook 'go-mode-hook (lambda ()
+                                (set (make-local-variable 'company-backends) '(company-go))
+                                (company-mode)
+                                (company-quickhelp-mode)))
+    )
   )
 
 (defun dotspacemacs/user-config ()
@@ -552,7 +596,9 @@ you should place your code here."
   (cfg-yasnippet)
   (cfg-auto-complete)
   (cfg-github)
+  (cfg-org)
   (cfg-spelling)
+  (cfg-go)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -584,7 +630,7 @@ This function is called at the very end of Spacemacs initialization."
  '(org-agenda-files (quote ("~/Documents/org/todo_work.org")))
  '(package-selected-packages
    (quote
-    (vlf xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help diff-hl company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (pocket-reader org-web-tools rainbow-identifiers ov pocket-lib kv esxml xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help diff-hl company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
