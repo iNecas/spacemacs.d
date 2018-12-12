@@ -514,6 +514,19 @@ Spell Commands^^             Other
   (spacemacs/set-leader-keys "S." 'spacemacs/spell-checking2-transient-state/body)
   )
 
+(defun inc-eval-defun-and-run ()
+  (interactive)
+  (let ((fun (eval-defun nil)))
+    (apply (list fun))
+    (message "%s finished" fun)
+    )
+  )
+
+(defun cfg-inc ()
+  "configure inc-prefixed functions and bindings"
+  (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode "eF" 'inc-eval-defun-and-run)
+  )
+
 (defun cfg-org ()
   (with-eval-after-load 'org
   (setq org-journal-dir "~/Documents/org/journal/")
@@ -599,6 +612,7 @@ you should place your code here."
   (cfg-org)
   (cfg-spelling)
   (cfg-go)
+  (cfg-inc)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
