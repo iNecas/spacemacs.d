@@ -522,9 +522,53 @@ Spell Commands^^             Other
     )
   )
 
+;; inspired by https://orgmode.org/worg/org-hacks.html
+(require 'mm-url) ; to include mm-url-decode-entities-string
+
+(defun inc-org-insert-from-link (&optional with-task)
+  "Insert org link where default description is set to html title."
+  (interactive)
+  (let* ((url (current-kill 0))
+         (title (inc-get-html-title-from-url url)))
+    (when with-task
+      (org-insert-heading-after-current)
+      (insert (format "TODO %s\n\n" title)))
+    (insert (format "[[%s][%s]]" url title))
+    (when with-task (outline-hide-subtree))
+    ))
+
+(defun inc-org-insert-task-from-link ()
+  (interactive)
+  (inc-org-insert-from-link t))
+
+(defun inc-get-html-title-from-url (url)
+  "Return content in <title> tag."
+  (let (x1 x2 title (download-buffer (url-retrieve-synchronously url)))
+    (save-excursion
+      (set-buffer download-buffer)
+      (beginning-of-buffer)
+      (setq x1 (search-forward "<title>"))
+      (search-forward "</title>")
+      (setq x2 (search-backward "<"))
+      (setq title (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))
+      (inc-html-title-extracted url title))))
+
+(defun inc-html-title-extracted (url title)
+  "Format the title in a desired format, can be url specific"
+  (cond ((string-match-p "github" url)
+         (if (string-match "^\\([[:ascii:]]*\\) by [[:alnum:]]* " title)
+             (setq title (message (match-string-no-properties 1 title))))
+         (setq title (format "Github PR: %s" title))
+         )
+        )
+  title
+  )
+
 (defun cfg-inc ()
   "configure inc-prefixed functions and bindings"
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode "eF" 'inc-eval-defun-and-run)
+  (spacemacs/set-leader-keys "iU" 'inc-org-insert-task-from-link)
+  (spacemacs/set-leader-keys "iu" 'inc-org-insert-from-link)
   )
 
 (defun cfg-org ()
