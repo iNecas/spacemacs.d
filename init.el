@@ -422,6 +422,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun cfg-flycheck ()
   (setq-default flycheck-disabled-checkers '(ruby-rubocop))
+  (setq flycheck-display-errors-function #'flycheck-display-error-messages)
   )
 
 (defun cfg-github ()
