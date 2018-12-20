@@ -560,6 +560,9 @@ Spell Commands^^             Other
              (setq title (message (match-string-no-properties 1 title))))
          (setq title (format "Github PR: %s" title))
          )
+        ((string-match-p "bugzilla" url)
+         (setq title (format "BZ: %s" title))
+         )
         )
   title
   )
@@ -575,11 +578,12 @@ Spell Commands^^             Other
   (with-eval-after-load 'org
   (setq org-journal-dir "~/Documents/org/journal/")
   (setq org-startup-indented t)
+  (setq org-agenda-files '("~/Documents/org/todo_work.org" "~/Documents/org/emacs.org" "~/Documents/org/go.org" "~/Documents/org/todo_personal.org"))
   (setq org-tag-alist '(("triage" . ?t) ("fix" . ?f) ("review" . ?r)
                         ("school" . ?s) ("write" . ?w) ("devel" . ?d) ("learn" . ?l) ("repeating" . ?R)
-                        ("customer" . ?c) ("investigate" . ?i) ("improve" . ?I)("emacs" . ?e) ("hotfix" . ?h)))
+                        ("customer" . ?c) ("investigate" . ?i) ("improve" . ?I) ("emacs" . ?e) ("hotfix" . ?h)))
   (setq org-agenda-custom-commands
-        '(("n" "Agenda and all TODOs" ((agenda "") (alltodo "")))
+        '(("n" "Agenda, started and other" ((agenda "") (todo "STARTED|WAITING") (todo "TODO") (todo "DELEGATED|DEFERRED")))
           ("u" "Unscheduled TODO"
            ((todo ""
                   ((org-agenda-overriding-header "\nUnscheduled TODO")
@@ -593,13 +597,13 @@ Spell Commands^^             Other
         (quote (("p" "Todo Personal" entry (file+headline "~/Documents/org/todo_personal.org" "Personal Tasks") "* TODO %?" :clock-keep t)
                 ("w" "Todo Work" entry (file+headline "~/Documents/org/todo_work.org" "Work Tasks") "* TODO %?" :clock-keep t)
                 ("s" "Todo School" entry (file+headline "~/Documents/org/todo_school.org" "School Tasks") "* TODO %?" :clock-keep t)
-                ("e" "Todo Emacs" entry (file+headline "~/Documents/org/todo_emacs.org" "Emacs Tasks") "* TODO %?" :clock-keep t)
+                ("e" "Emacs Tasks" entry (file+headline "~/Documents/org/emacs.org" "Tasks") "* TODO %?" :clock-keep t)
                 ("b" "Todo Brunclik" entry (file+headline "~/Documents/org/todo_brunclik.org" "AKS Tasks") "* TODO %?" :clock-keep t)
                 ("a" "Todo Apipie" entry (file+headline "~/Documents/org/todo_apipie.org" "Apipie Tasks") "* TODO %?" :clock-keep t)
                 ("P" "Notes Personal" entry (file+headline "~/Documents/org/notes_personal.org" "Personal Notes") "* %u %?" :clock-keep t)
                 ("W" "Notes Work" entry (file+headline "~/Documents/org/notes_work.org" "Work Notes") "* %u %?" :clock-keep t)
                 ("S" "Notes School" entry (file+headline "~/Documents/org/notes_school.org" "School Notes") "* %u %?" :clock-keep t)
-                ("E" "Notes Emacs" entry (file+headline "~/Documents/org/notes_emacs.org" "Emacs Notes") "* %u %?" :clock-keep t)
+                ("E" "Emacs Notes" entry (file+headline "~/Documents/org/emacs.org" "Notes") "* %u %?" :clock-keep t)
                 ("B" "Notes Bruclik" entry (file+headline "~/Documents/org/notes_brunclik.org" "AKS Notes") "* %u %?" :clock-keep t)
                 ("A" "Notes Apipie" entry (file+headline "~/Documents/org/notes_apipie.org" "Apipie Notes") "* %u %?" :clock-keep t)
                 ("n" "Notes" entry (file "~/Documents/org/notes.org") "* %u %?" :clock-keep t)
@@ -607,15 +611,20 @@ Spell Commands^^             Other
   )
   )
 
-(defun inc-go-show-doc ()
+(defvar-local inc-company-main-backend nil
+  "The backend to be used in inc-quickhelp-show. It's meant to be used as buffer local variable")
+
+(defun inc-quickhelp-show ()
   (interactive)
-  (forward-word)
-  (setq company-backend 'company-go)
-  (setq company-point (point))
-  ;; (setq company-candidates (company-go 'candidates))
-  (company-update-candidates (company-go 'candidates))
+  (save-excursion
+    (setq company-frontends '(company-pseudo-tooltip-frontend company-quickhelp-frontend))
+    (if (not inc-company-main-backend)
+        (error "inc-company-main-backend not set"))
+    (forward-word)
+    (setq company-backend inc-company-main-backend)
+    (setq company-point (point))
+    (company-update-candidates (apply inc-company-main-backend '(candidates))))
   (company-call-frontends 'update)
-  ;;(company-search-mode 1)
   )
 
 (defun cfg-go ()
@@ -624,9 +633,10 @@ Spell Commands^^             Other
     (setq godoc-at-point-function 'godoc-gogetdoc)
     (setq go-tab-width 8)
     (add-hook 'go-mode-hook (lambda ()
-                                (set (make-local-variable 'company-backends) '(company-go))
-                                (company-mode)
-                                (company-quickhelp-mode)))
+                              (set (make-local-variable 'company-backends) '(company-go))
+                              (setq inc-company-main-backend 'company-go)
+                              (company-mode)
+                              (company-quickhelp-mode)))
     )
   )
 
@@ -685,7 +695,6 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/Documents/org/todo_work.org")))
  '(package-selected-packages
    (quote
     (pocket-reader org-web-tools rainbow-identifiers ov pocket-lib kv esxml xterm-color unfill smeargle shell-pop orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim multi-term mmm-mode markdown-toc markdown-mode magit-gitflow htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit ghub with-editor eshell-z eshell-prompt-extras esh-help diff-hl company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
