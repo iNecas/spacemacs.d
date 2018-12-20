@@ -40,7 +40,7 @@ values."
      (auto-completion :variables
                       auto-completion-enable-help-tooltip 'manual
                       auto-completion-private-snippets-directory "~/.spacemacs.d/snippets"
-                      auto-completion-enable-snippets-in-popup t)
+                      auto-completion-enable-snippets-in-popup nil)
      better-defaults
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix t)
      git
@@ -404,6 +404,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (global-set-key (kbd "C-M-j") 'evil-window-down)
   )
 
+(defun cfg-term ()
+  (define-key term-raw-map (kbd "C-M-l") 'evil-window-right)
+  (define-key term-raw-map (kbd "C-M-h") 'evil-window-left)
+  (define-key term-raw-map (kbd "C-M-k") 'evil-window-up)
+  (define-key term-raw-map (kbd "C-M-j") 'evil-window-down)
+  )
+
 (defun cfg-evil-mc ()
   (with-eval-after-load 'evil-mc-mode
     (global-evil-mc-mode 1)
@@ -668,6 +675,7 @@ you should place your code here."
   (cfg-spelling)
   (cfg-go)
   (cfg-inc)
+  (cfg-term)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
