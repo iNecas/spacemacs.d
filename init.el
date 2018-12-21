@@ -640,8 +640,11 @@ Spell Commands^^             Other
   (with-eval-after-load 'go-mode
     (setq go-format-before-save t)
     (setq godoc-at-point-function 'godoc-gogetdoc)
-    (setq go-tab-width 8)
+    (setq go-tab-width 4)
+    (spacemacs/set-leader-keys-for-major-mode 'go-mode "hH" 'godoc)
     (add-hook 'go-mode-hook (lambda ()
+                              (clean-aindent-mode 0)
+                              (clean-aindent-mode 1) ;; re-enable the mode to fix some preliminary cleanup on RET
                               (set (make-local-variable 'company-backends) '(company-go))
                               (setq inc-company-main-backend 'company-go)
                               (company-mode)
