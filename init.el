@@ -405,11 +405,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun cfg-term ()
-  (define-key term-raw-map (kbd "C-M-l") 'evil-window-right)
-  (define-key term-raw-map (kbd "C-M-h") 'evil-window-left)
-  (define-key term-raw-map (kbd "C-M-k") 'evil-window-up)
-  (define-key term-raw-map (kbd "C-M-j") 'evil-window-down)
-  )
+  (with-eval-after-load 'term
+    (define-key term-raw-map (kbd "C-M-l") 'evil-window-right)
+    (define-key term-raw-map (kbd "C-M-h") 'evil-window-left)
+    (define-key term-raw-map (kbd "C-M-k") 'evil-window-up)
+    (define-key term-raw-map (kbd "C-M-j") 'evil-window-down)
+    ))
 
 (defun cfg-evil-mc ()
   (with-eval-after-load 'evil-mc-mode
