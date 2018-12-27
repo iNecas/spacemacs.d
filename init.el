@@ -686,6 +686,8 @@ you should place your code here."
   (cfg-go)
   (cfg-inc)
   (cfg-term)
+  (require 'personal)
+  (cfg-personal)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
