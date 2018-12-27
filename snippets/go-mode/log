@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: log
+# key: log
+# --
+log.Printf("$0")
