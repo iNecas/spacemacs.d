@@ -591,40 +591,19 @@ Spell Commands^^             Other
 
 (defun cfg-org ()
   (with-eval-after-load 'org
-  (setq org-journal-dir "~/Documents/org/journal/")
-  (setq org-startup-indented t)
-  (setq org-agenda-files '("~/Documents/org/todo_work.org" "~/Documents/org/emacs.org" "~/Documents/org/go.org" "~/Documents/org/todo_personal.org"))
-  (setq org-tag-alist '(("triage" . ?t) ("fix" . ?f) ("review" . ?r)
-                        ("school" . ?s) ("write" . ?w) ("devel" . ?d) ("learn" . ?l) ("repeating" . ?R)
-                        ("customer" . ?c) ("investigate" . ?i) ("improve" . ?I) ("emacs" . ?e) ("hotfix" . ?h)))
-  (setq org-agenda-custom-commands
-        '(("n" "Agenda, started and other" ((agenda "") (todo "STARTED|WAITING") (todo "TODO") (todo "DELEGATED|DEFERRED")))
-          ("u" "Unscheduled TODO"
-           ((todo ""
-                  ((org-agenda-overriding-header "\nUnscheduled TODO")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)))))
-           nil
-           nil)))
-  (setq org-agenda-log-mode-items '(closed clock state))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "SCHEDULED" "STARTED" "WAITING(@/!)" "DELEGATED(@/!)" "DEFERRED(@/!)" "|" "DONE(d!)" "CANCELLED(@/!)" "NONE")))
-  (setq org-capture-templates
-        (quote (("p" "Todo Personal" entry (file+headline "~/Documents/org/todo_personal.org" "Personal Tasks") "* TODO %?" :clock-keep t)
-                ("w" "Todo Work" entry (file+headline "~/Documents/org/todo_work.org" "Work Tasks") "* TODO %?" :clock-keep t)
-                ("s" "Todo School" entry (file+headline "~/Documents/org/todo_school.org" "School Tasks") "* TODO %?" :clock-keep t)
-                ("e" "Emacs Tasks" entry (file+headline "~/Documents/org/emacs.org" "Tasks") "* TODO %?" :clock-keep t)
-                ("b" "Todo Brunclik" entry (file+headline "~/Documents/org/todo_brunclik.org" "AKS Tasks") "* TODO %?" :clock-keep t)
-                ("a" "Todo Apipie" entry (file+headline "~/Documents/org/todo_apipie.org" "Apipie Tasks") "* TODO %?" :clock-keep t)
-                ("P" "Notes Personal" entry (file+headline "~/Documents/org/notes_personal.org" "Personal Notes") "* %u %?" :clock-keep t)
-                ("W" "Notes Work" entry (file+headline "~/Documents/org/notes_work.org" "Work Notes") "* %u %?" :clock-keep t)
-                ("S" "Notes School" entry (file+headline "~/Documents/org/notes_school.org" "School Notes") "* %u %?" :clock-keep t)
-                ("E" "Emacs Notes" entry (file+headline "~/Documents/org/emacs.org" "Notes") "* %u %?" :clock-keep t)
-                ("B" "Notes Bruclik" entry (file+headline "~/Documents/org/notes_brunclik.org" "AKS Notes") "* %u %?" :clock-keep t)
-                ("A" "Notes Apipie" entry (file+headline "~/Documents/org/notes_apipie.org" "Apipie Notes") "* %u %?" :clock-keep t)
-                ("n" "Notes" entry (file "~/Documents/org/notes.org") "* %u %?" :clock-keep t)
-                ("d" "Done" entry (file+headline "~/Documents/org/todo.org" "Tasks") "* DONE %?\n  CLOSED: %U" :clock-keep t))))
-  )
-  )
+    (setq org-startup-indented t)
+    (setq org-agenda-custom-commands
+          '(("n" "Agenda, started and other" ((agenda "") (todo "STARTED|WAITING") (todo "TODO") (todo "DELEGATED|DEFERRED")))
+            ("u" "Unscheduled TODO"
+             ((todo ""
+                    ((org-agenda-overriding-header "\nUnscheduled TODO")
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)))))
+             nil
+             nil)))
+    (setq org-agenda-log-mode-items '(closed clock state))
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "SCHEDULED" "STARTED" "WAITING(@/!)" "DELEGATED(@/!)" "DEFERRED(@/!)" "|" "DONE(d!)" "CANCELLED(@/!)" "NONE")))
+    ))
 
 (defvar-local inc-company-main-backend nil
   "The backend to be used in inc-quickhelp-show. It's meant to be used as buffer local variable")
