@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: fori
+# key: fori
+# --
+for ${2:i} := 0; $2 < ${1:max}; $2++ {
+	$0
+}
