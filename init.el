@@ -476,6 +476,16 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun cfg-yasnippet ()
   (with-eval-after-load 'yasnippet
+    (defun inc-yas-create ()
+      "Create a snippet from current selection"
+      (interactive)
+      (unless (region-active-p)
+        (error "No selection"))
+      (setq aya-current (buffer-substring-no-properties (region-beginning) (region-end)))
+      (call-interactively #'aya-persist-snippet))
+
+    (spacemacs/set-leader-keys "iSS" #'inc-yas-create)
+
     (let ((yasnippet-snippets-custom-dir (concat dotspacemacs-directory
                                                  "yasnippet-snippets/"
                                                  "snippets/")))
