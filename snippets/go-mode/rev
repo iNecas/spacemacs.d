@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: reverse slice
+# key: rev
+# --
+// reverse $1
+for l, r := 0, len(${1:slice})-1; l < r; l, r = l+1, r-1 {
+	$1[l], slice[r] = $1[r], $1[l]
+}

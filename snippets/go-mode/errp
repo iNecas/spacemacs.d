@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# contributor: Ivan Necas
+# name: errp
+# key: errp
+# --
+if err != nil {
+	log.Print(err)$0
+}
