@@ -476,6 +476,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
 (defun cfg-yasnippet ()
   (with-eval-after-load 'yasnippet
+    (require 'auto-yasnippet)
     (defun inc-yas-create ()
       "Create a snippet from current selection"
       (interactive)
