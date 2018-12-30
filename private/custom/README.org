@@ -1,0 +1,35 @@
+#+TITLE: custom layer
+
+A layer for customizations/local changes for packages
+
+# TOC links should be GitHub style anchors.
+* Table of Contents                                        :TOC_4_gh:noexport:
+- [[#description][Description]]
+- [[#install][Install]]
+
+* Description
+This layer adds support for something.
+
+To add custom package:
+
+1. clone your fork of =my-package= into =local= directory
+2. Add the initialization for the package as follows:
+
+#+BEGIN_SRC elisp
+  (defconst custom-packages
+    '(
+      (my-package :location local)
+      )
+    )
+
+  (defun custom/my-package ()
+    "Use the initialization of the original layer"
+    (original-layer/my-package)
+    )
+#+END_SRC
+
+* Install
+To use this configuration layer, add it to your =~/.spacemacs=. You will need to
+add =custom= to the existing =dotspacemacs-configuration-layers= list in this
+file.
+

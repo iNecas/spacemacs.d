@@ -27,7 +27,8 @@ values."
    ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
-   dotspacemacs-configuration-layer-path '()
+   inc-private-layers-dir "~/.spacemacs.d/private/"
+   dotspacemacs-configuration-layer-path (list inc-private-layers-dir)
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(csv
@@ -90,7 +91,12 @@ values."
    ;; `used-but-keep-unused' installs only the used packages but won't uninstall
    ;; them if they become unused. `all' installs *all* packages supported by
    ;; Spacemacs and never uninstall them. (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only)
+
+  ;; enable all private layers by default
+  (setq dotspacemacs-configuration-layers (append dotspacemacs-configuration-layers
+                                        (mapcar 'intern (directory-files inc-private-layers-dir nil "[^.]"))))
+  )
 
 (defun dotspacemacs/init ()
   "Initialization function.

@@ -1,2 +1,4 @@
 .spacemacs.env
 etc/personal.el
+private/custom/local
+private/custom/packages.el
