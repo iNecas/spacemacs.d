@@ -577,16 +577,21 @@ Spell Commands^^             Other
   (interactive)
   (inc-org-insert-from-link t))
 
-(defun inc-get-html-title-from-url (url)
+(defun inc-get-html-title-from-url (&optional url)
   "Return content in <title> tag."
-  (let (x1 x2 title (download-buffer (url-retrieve-synchronously url)))
+  (let* (x1 x2 title
+           (url (or url (current-kill 0)))
+           (download-buffer (url-retrieve-synchronously url))
+           )
     (save-excursion
       (set-buffer download-buffer)
       (beginning-of-buffer)
       (setq x1 (search-forward "<title>"))
       (search-forward "</title>")
       (setq x2 (search-backward "<"))
-      (setq title (mm-url-decode-entities-string (buffer-substring-no-properties x1 x2)))
+      (setq title (-> (buffer-substring-no-properties x1 x2)
+                      mm-url-decode-entities-string
+                      s-trim))
       (inc-html-title-extracted url title))))
 
 (defun inc-html-title-extracted (url title)
@@ -595,6 +600,11 @@ Spell Commands^^             Other
          (if (string-match "^\\([[:ascii:]]*\\) by [[:alnum:]]* " title)
              (setq title (message (match-string-no-properties 1 title))))
          (setq title (format "Github PR: %s" title))
+         )
+        ((string-match-p "gitlab" url)
+         (if (string-match "^\\([[:ascii:]]*\\)" title)
+             (setq title (message (match-string-no-properties 1 title))))
+         (setq title (format "Gitlab MR: %s" title))
          )
         ((string-match-p "bugzilla" url)
          (setq title (format "BZ: %s" title))
