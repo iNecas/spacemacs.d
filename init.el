@@ -55,7 +55,9 @@ values."
      markdown
      (org :variables
           org-enable-org-journal-support t
-          org-journal-dir "~/Documents/org/journal/")
+          org-journal-dir "~/Documents/org/journal/"
+          org-journal-date-format "%A, %Y-%m-%d"
+          )
      plantuml
      react
      python
@@ -601,10 +603,35 @@ Spell Commands^^             Other
   title
   )
 
+(defun inc-org-journal-show-current ()
+  "Open current journal file"
+  (interactive)
+  (require 'org-journal)
+  (let ((file (org-journal-get-entry-path)))
+    (if (file-exists-p file)
+        (switch-to-buffer (find-file-noselect file))
+      (org-journal-new-entry t)
+        )
+    )
+  )
+
+(defun inc-org-journal-hook ()
+  "Hook to run after journal mode is enabled"
+  (ispell-change-dictionary "czech")
+  (auto-fill-mode 1)
+  )
+
+(defun cfg-org-journal ()
+  (with-eval-after-load 'org-journal
+     (add-hook 'org-journal-mode-hook #'inc-org-journal-hook)
+     (spacemacs/set-leader-keys "ij" 'inc-org-journal-show-current)
+    )
+  )
+
 (defun cfg-inc ()
   "configure inc-prefixed functions and bindings"
   (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode "eF" 'inc-eval-defun-and-run)
-  (spacemacs/set-leader-keys "iU" 'inc-org-insert-task-from-link)
+  (spacemacs/set-leader-keys "it" 'inc-org-insert-task-from-link)
   (spacemacs/set-leader-keys "iu" 'inc-org-insert-from-link)
   )
 
@@ -686,6 +713,7 @@ you should place your code here."
   (cfg-term)
   (require 'personal)
   (cfg-personal)
+  (cfg-org-journal)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
