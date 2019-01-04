@@ -449,7 +449,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     )
   )
 
-(defun cfg-github ()
+(defun cfg-git()
   (require 'git-link)
   (defun git-link-github (hostname dirname filename branch commit start end)
     "Override the git-link-github handler to always use commits instead of branched"
@@ -463,6 +463,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
                               (if end
                                   (format "L%s-L%s" start end)
                                 (format "L%s" start)))))))
+
+  (with-eval-after-load 'magit
+    ;; The Foreman's preferences for the commit message format.
+    (setq git-commit-summary-max-length 65
+          git-commit-fill-column 73)
+    )
   )
 
 (defun cfg-dired ()
@@ -715,7 +721,7 @@ you should place your code here."
   (cfg-flycheck)
   (cfg-yasnippet)
   (cfg-auto-complete)
-  (cfg-github)
+  (cfg-git)
   (cfg-org)
   (cfg-spelling)
   (cfg-go)
