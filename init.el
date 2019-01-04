@@ -31,7 +31,8 @@ values."
    dotspacemacs-configuration-layer-path (list inc-private-layers-dir)
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(csv
+   '(rust
+     csv
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
