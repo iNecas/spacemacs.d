@@ -616,7 +616,7 @@ Spell Commands^^             Other
          (setq title (format "BZ: %s" title))
          )
         )
-  title
+  (decode-coding-string title 'utf-8)
   )
 
 (defun inc-org-journal-show-current ()
