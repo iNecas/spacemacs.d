@@ -420,7 +420,10 @@ before packages are loaded. If you are unsure, you should try in setting them in
                    ruby-forward-sexp nil)))
 
   (spacemacs/declare-prefix-for-mode 'ruby-mode "me" "repl")
-  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "e" (lookup-key spacemacs-ruby-mode-map (kbd "s")))
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode
+    "e" (lookup-key spacemacs-ruby-mode-map (kbd "s"))
+    "ee" 'ruby-switch-to-inf
+    "eE" 'inf-ruby-console-auto)
   )
 
 (defun cfg-windows ()
