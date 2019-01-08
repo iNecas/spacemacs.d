@@ -413,6 +413,9 @@ before packages are loaded. If you are unsure, you should try in setting them in
                    ,(rx (or "}" "]" "end"))      ; Block end
                    ,(rx (or "#" "=begin"))       ; Comment start
                    ruby-forward-sexp nil)))
+
+  (spacemacs/declare-prefix-for-mode 'ruby-mode "me" "repl")
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode "e" (lookup-key spacemacs-ruby-mode-map (kbd "s")))
   )
 
 (defun cfg-windows ()
