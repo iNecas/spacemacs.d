@@ -357,6 +357,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
     ))
 
+(defun inec-inf-ruby-set-history ()
+  "Set inf ruby history to ~/.pry_history"
+  (setq comint-input-ring-file-name "~/.pry_history")
+  (comint-read-input-ring)
+  )
+
 (defun cfg-ruby ()
   (with-eval-after-load 'inf-ruby
     (defun ruby-send-region (start end &optional print)
@@ -386,6 +392,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
         (comint-send-region (inf-ruby-proc) start end)
         (comint-send-string (inf-ruby-proc) (concat "\n" term "\n"))
         (when print (ruby-print-result))))
+
+    (add-hook 'inf-ruby-mode #'inec-inf-ruby-set-history)
     )
   (with-eval-after-load 'ruby-tools (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
   (with-eval-after-load 'ruby-mode
