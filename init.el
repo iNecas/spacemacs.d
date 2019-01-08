@@ -357,10 +357,15 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
     ))
 
-(defun inec-inf-ruby-set-history ()
-  "Set inf ruby history to ~/.pry_history"
+(defun inec-inf-ruby-configure ()
+  "Additional configuration for inf-ruby mode"
+  ;; set persisted history
   (setq comint-input-ring-file-name "~/.pry_history")
   (comint-read-input-ring)
+
+  ;; configure company mode
+  (company-mode 1)
+  (push 'company-capf company-backends)
   )
 
 (defun cfg-ruby ()
@@ -393,7 +398,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
         (comint-send-string (inf-ruby-proc) (concat "\n" term "\n"))
         (when print (ruby-print-result))))
 
-    (add-hook 'inf-ruby-mode #'inec-inf-ruby-set-history)
+    (add-hook 'inf-ruby-mode-hook #'inec-inf-ruby-configure)
     )
   (with-eval-after-load 'ruby-tools (add-hook 'ruby-mode-hook (lambda () (hs-minor-mode))))
   (with-eval-after-load 'ruby-mode
@@ -524,6 +529,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (with-eval-after-load 'company
     (global-set-key (kbd "M-C-/") 'company-filter-candidates)
     (global-set-key (kbd "M-\\") 'dabbrev-completion)
+
+    ;; fix next/previous commands when filtering
+    (define-key company-search-map (kbd "C-n") 'company-select-next)
+    (define-key company-search-map (kbd "C-p") 'company-select-previous)
+    (require 'company-quickhelp)
     (setq company-frontends '(company-pseudo-tooltip-frontend company-quickhelp-frontend))
     )
   )
