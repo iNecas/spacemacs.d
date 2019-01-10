@@ -661,6 +661,15 @@ Spell Commands^^             Other
   (auto-fill-mode 1)
   )
 
+(defun inec-org-yank-link ()
+  "Copy link from org mode"
+  (interactive)
+  (if (org-in-regexp org-bracket-link-regexp 1)
+      (let ((link (match-string-no-properties 1)))
+        (kill-new link)
+        (message "Link '%s' stored in kill-ring" link))
+    (error "Not link at a point")))
+
 (defun cfg-org-journal ()
   (with-eval-after-load 'org-journal
      (add-hook 'org-journal-mode-hook #'inc-org-journal-hook)
@@ -689,6 +698,7 @@ Spell Commands^^             Other
     (setq org-agenda-log-mode-items '(closed clock state))
     (setq org-todo-keywords
           '((sequence "TODO(t)" "SCHEDULED" "STARTED" "WAITING(@/!)" "DELEGATED(@/!)" "DEFERRED(@/!)" "|" "DONE(d!)" "CANCELLED(@/!)" "NONE")))
+    (spacemacs/set-leader-keys-for-major-mode 'org-mode "ly" #'inec-org-yank-link)
     ))
 
 (defvar-local inc-company-main-backend nil
