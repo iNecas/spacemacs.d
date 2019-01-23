@@ -470,6 +470,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun cfg-git()
+  (keychain-refresh-environment)
   (require 'git-link)
   (defun git-link-github (hostname dirname filename branch commit start end)
     "Override the git-link-github handler to always use commits instead of branched"
