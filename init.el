@@ -489,6 +489,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (setq git-commit-summary-max-length 65
           git-commit-fill-column 73)
     )
+  (setq evil-magit-want-horizontal-movement t)
   )
 
 (defun cfg-dired ()
