@@ -355,6 +355,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
     (add-to-list 'projectile-globally-ignored-directories "node_modules")
     (global-set-key (kbd "C-x b") 'helm-mini)
     (global-set-key (kbd "C-x C-b") 'helm-projectile-switch-to-buffer)
+    (spacemacs/set-leader-keys "/" 'helm-projectile-ag)
     ))
 
 (defun inec-inf-ruby-configure ()
